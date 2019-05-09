@@ -1,6 +1,7 @@
 # number-to-words
 
 ## Next plans
+- add more test cases
 - clean code
   - remove duplicate code
   - handle error
