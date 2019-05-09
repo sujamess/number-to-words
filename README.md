@@ -8,7 +8,7 @@
 - improve speed
 - new features
   - convert without baht text
-  - new language(?)
+  - new language support(?)
 
 ## Install
 ```go get -u github.com/sujamess/number-to-word```
