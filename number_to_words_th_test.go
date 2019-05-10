@@ -18,6 +18,30 @@ func TestIntegerTH(t *testing.T) {
 	})
 
 	t.Run("case 1-9 without decimal point", func(*testing.T) {
+		str := "21"
+
+		got, _ := readerTH(str, th)
+
+		want := "ยี่สิบเอ็ด"
+
+		if got != want {
+			t.Errorf(`Expect "%v" got "%v"`, want, got)
+		}
+	})
+
+	t.Run("case 1-9 without decimal point", func(*testing.T) {
+		str := "31"
+
+		got, _ := readerTH(str, th)
+
+		want := "สามสิบเอ็ด"
+
+		if got != want {
+			t.Errorf(`Expect "%v" got "%v"`, want, got)
+		}
+	})
+
+	t.Run("case 1-9 without decimal point", func(*testing.T) {
 		str := "5"
 
 		got, _ := readerTH(str, th)

@@ -67,7 +67,13 @@ func readerTH(str, lang string) (string, error) {
 		)
 
 		if isSmallNumber(int(integer)) {
-			word = getSmallNumber(int(integer), lang)
+			switch int(integer) {
+			case 1:
+				word = getSpecialNumber(int(integer), lang)
+			default:
+				word = getSmallNumber(int(integer), lang)
+			}
+
 			integer = 0.00
 		} else {
 			digitKey := integerLength - idx - 1
