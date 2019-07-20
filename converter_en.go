@@ -51,18 +51,13 @@ func (c *Converter) convertEN() (string, error) {
 						}
 					}
 
-					fmt.Println("num:", num)
-
 					text, err = Convert(float64(num), c.Lang)
 					if err != nil {
 						return "", err
 					}
-
-					fmt.Println("text:", text)
 				} else {
 					text = getNumberText(num, c.Lang)
 				}
-				fmt.Println("text:", text)
 
 				c.Text += fmt.Sprintf("%s %s ", text, getDigitText(digit, c.Lang))
 			} else if digit == tenDigitKey {
