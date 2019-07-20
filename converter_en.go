@@ -34,9 +34,11 @@ func (c *Converter) convertEN() (string, error) {
 				continue
 			}
 
-			if digit == thousandDigitKey || digit == millionDigitKey {
-				var text string
+			numberText := getNumberText(num, c.Lang)
+			digitText := getDigitText(digit, c.Lang)
+			isSpecialNumber := false
 
+			if digit == thousandDigitKey || digit == millionDigitKey {
 				if len(decimal) >= digit+3 || len(decimal) >= digit+2 {
 					if len(decimal) >= digit+3 {
 						num, err = strconv.Atoi(string(decimal[idx-2]) + string(decimal[idx-1]) + string(b))
@@ -51,25 +53,23 @@ func (c *Converter) convertEN() (string, error) {
 						}
 					}
 
-					text, err = Convert(float64(num), c.Lang)
+					numberText, err = Convert(float64(num), c.Lang)
 					if err != nil {
 						return "", err
 					}
-				} else {
-					text = getNumberText(num, c.Lang)
 				}
+			}
 
-				c.Text += fmt.Sprintf("%s %s ", text, getDigitText(digit, c.Lang))
-			} else if digit == tenDigitKey {
-				numberText, isSpecialNumber := isSpecialNumberCase(num, c.Lang)
+			if digit == tenDigitKey {
+				numberText, isSpecialNumber = isSpecialNumberCase(num, c.Lang)
 
 				if !isSpecialNumber {
 					numberText = getNumberText(num, c.Lang)
 				}
 
-				c.Text += fmt.Sprintf("%s%s ", numberText, getDigitText(digit, c.Lang))
+				c.Text += fmt.Sprintf("%s%s ", numberText, digitText)
 			} else {
-				c.Text += fmt.Sprintf("%s %s ", getNumberText(num, c.Lang), getDigitText(digit, c.Lang))
+				c.Text += fmt.Sprintf("%s %s ", numberText, digitText)
 			}
 
 			decimalLeft -= num * int(math.Pow(10, float64(digit)))
