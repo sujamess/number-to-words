@@ -7,7 +7,7 @@ import (
 
 // Convert converts number to text (supporting English and Thai), default lang is English
 // Supporting 2 precision
-func Convert(number float64, lang string) (string, error) {
+func Convert(number float64, lang string) (*Converter, error) {
 	formattedNumber := strconv.FormatFloat(number, 'f', 2, 64)
 
 	splits := strings.Split(formattedNumber, ".")
@@ -15,19 +15,13 @@ func Convert(number float64, lang string) (string, error) {
 
 	decimal, err := strconv.Atoi(d)
 	if err != nil {
-		return "", ErrConversion
+		return nil, ErrConversion
 	}
 
 	floating, err := strconv.Atoi(fp)
 	if err != nil {
-		return "", ErrConversion
+		return nil, ErrConversion
 	}
 
-	converter := &Converter{
-		Decimal:  decimal,
-		Floating: floating,
-		Lang:     lang,
-	}
-
-	return converter.Convert()
+	return NewConverter(decimal, floating, lang), nil
 }

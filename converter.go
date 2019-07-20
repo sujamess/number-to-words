@@ -10,6 +10,7 @@ type Converter struct {
 	Floating int
 	Lang     string
 	Text     string
+	Currency string
 }
 
 // NewConverter returns a new converter
@@ -44,4 +45,16 @@ func (c *Converter) validateLang() bool {
 	c.Lang = strings.ToLower(c.Lang)
 
 	return validateLang(c.Lang)
+}
+
+// GetText gets text
+func (c *Converter) GetText() string {
+	return c.Text
+}
+
+// SetCurrency append currency to converted text
+func (c *Converter) SetCurrency(currency string) *Converter {
+	c.Currency = currency
+
+	return c
 }

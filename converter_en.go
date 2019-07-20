@@ -53,10 +53,12 @@ func (c *Converter) convertEN() (string, error) {
 						}
 					}
 
-					numberText, err = Convert(float64(num), c.Lang)
+					cvt, err := Convert(float64(num), c.Lang)
 					if err != nil {
 						return "", err
 					}
+
+					numberText = cvt.GetText()
 				}
 			}
 
