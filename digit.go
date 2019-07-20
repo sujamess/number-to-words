@@ -11,7 +11,9 @@ const (
 	tenMillionDigitKey      int = 7
 )
 
-var digitList = map[string]map[int]string{
+type digitText map[int]string
+
+var digitList = map[string]digitText{
 	en: {
 		digitKey:                "",
 		tenDigitKey:             "ty",
@@ -22,22 +24,8 @@ var digitList = map[string]map[int]string{
 		millionDigitKey:         "million",
 		tenMillionDigitKey:      "tymillion",
 	},
-	th: {
-		digitKey:                "",
-		tenDigitKey:             "สิบ",
-		hundredDigitKey:         "ร้อย",
-		thousandDigitKey:        "พัน",
-		tenThousandDigitKey:     "หมื่น",
-		hundredThousandDigitKey: "แสน",
-		millionDigitKey:         "ล้าน",
-		tenMillionDigitKey:      "สิบล้าน",
-	},
 }
 
-var specialCaseDigit = map[string]map[int]string{
-	en: {
-		tenDigitKey:         "teen",
-		tenThousandDigitKey: "tenthousand",
-		tenMillionDigitKey:  "teenmillion",
-	},
+func getDigitText(digit int, lang string) string {
+	return digitList[lang][digit]
 }

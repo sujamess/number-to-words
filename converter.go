@@ -1,15 +1,47 @@
 package numbertowords
 
 import (
-	"fmt"
-	"strconv"
+	"strings"
 )
 
-func convertStringToFloat64(str string) (float64, error) {
-	f64, err := strconv.ParseFloat(str, 64)
-	if err != nil {
-		return f64, fmt.Errorf("Cannot parse %s to type float64", str)
+// Converter is a struct that for converting
+type Converter struct {
+	Decimal  int
+	Floating int
+	Lang     string
+	Text     string
+}
+
+// NewConverter returns a new converter
+func NewConverter(decimal, floating int, lang string) *Converter {
+	return &Converter{
+		Decimal:  decimal,
+		Floating: floating,
+		Lang:     lang,
+	}
+}
+
+// Convert converts string to text
+func (c *Converter) Convert() (string, error) {
+	if !c.validateLang() {
+		return "", ErrLangNotSupported
 	}
 
-	return f64, nil
+	switch c.Lang {
+	case supportedLang[en]:
+		return c.convertEN()
+	case supportedLang[th]:
+	}
+
+	return "", nil
+}
+
+func (c *Converter) validateLang() bool {
+	if c.Lang == "" {
+		c.Lang = supportedLang[en]
+	}
+
+	c.Lang = strings.ToLower(c.Lang)
+
+	return validateLang(c.Lang)
 }

@@ -1,7 +1,11 @@
 package numbertowords
 
-// supported language
 const (
-	th string = "TH"
-	en string = "EN"
+	en = "en"
+	th = "th"
 )
+
+var supportedLang = map[string]string{
+	en: en,
+	th: th,
+}

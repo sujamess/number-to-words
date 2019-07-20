@@ -5,34 +5,29 @@ import (
 	"strings"
 )
 
-// Convert converts given number to text bath
-// default lang = "en"
+// Convert converts number to text (supporting English and Thai), default lang is English
+// Supporting 2 precision
 func Convert(number float64, lang string) (string, error) {
-	switch strings.ToUpper(lang) {
-	case th:
-		lang = th
-	case en:
-		lang = en
-	default:
-		lang = en
+	formattedNumber := strconv.FormatFloat(number, 'f', 2, 64)
+
+	splits := strings.Split(formattedNumber, ".")
+	d, fp := splits[0], splits[1]
+
+	decimal, err := strconv.Atoi(d)
+	if err != nil {
+		return "", ErrConversion
 	}
 
-	return convert(number, lang)
-}
-
-func convert(number float64, lang string) (string, error) {
-	switch lang {
-	case th:
-		return fullWordsTH(number)
-	default:
-		return fullWordsEN(number)
+	floating, err := strconv.Atoi(fp)
+	if err != nil {
+		return "", ErrConversion
 	}
-}
 
-func getInteger(number float64) string {
-	return strings.Split(strconv.FormatFloat(number, 'f', 2, 64), ".")[0]
-}
+	converter := &Converter{
+		Decimal:  decimal,
+		Floating: floating,
+		Lang:     lang,
+	}
 
-func getDecimal(number float64) string {
-	return strings.Split(strconv.FormatFloat(number, 'f', 2, 64), ".")[1]
+	return converter.Convert()
 }
