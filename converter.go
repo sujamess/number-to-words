@@ -23,9 +23,9 @@ func NewConverter(decimal, floating int, lang string) *Converter {
 }
 
 // Convert converts string to text
-func (c *Converter) Convert() (string, error) {
+func (c *Converter) Convert() (*Converter, error) {
 	if !c.validateLang() {
-		return "", ErrLangNotSupported
+		return nil, ErrLangNotSupported
 	}
 
 	switch c.Lang {
@@ -34,7 +34,7 @@ func (c *Converter) Convert() (string, error) {
 	case supportedLang[th]:
 	}
 
-	return "", nil
+	return nil, ErrLangNotSupported
 }
 
 func (c *Converter) validateLang() bool {

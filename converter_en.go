@@ -6,9 +6,11 @@ import (
 	"strconv"
 )
 
-func (c *Converter) convertEN() (string, error) {
+func (c *Converter) convertEN() (*Converter, error) {
 	if isSmallNumber(c.Decimal) {
-		return getNumberText(c.Decimal, c.Lang), nil
+		c.Text = getNumberText(c.Decimal, c.Lang)
+
+		return c, nil
 	}
 
 	decimal, _ := []byte(strconv.Itoa(c.Decimal)), strconv.Itoa(c.Floating)
@@ -25,7 +27,7 @@ func (c *Converter) convertEN() (string, error) {
 		} else {
 			num, err := strconv.Atoi(string(b))
 			if err != nil {
-				return "", ErrConversion
+				return nil, ErrConversion
 			}
 
 			digit := len(decimal) - idx - 1
@@ -43,19 +45,24 @@ func (c *Converter) convertEN() (string, error) {
 					if len(decimal) >= digit+3 {
 						num, err = strconv.Atoi(string(decimal[idx-2]) + string(decimal[idx-1]) + string(b))
 						if err != nil {
-							return "", ErrConversion
+							return nil, ErrConversion
 						}
 
 					} else if len(decimal) >= digit+2 {
 						num, err = strconv.Atoi(string(decimal[idx-1]) + string(b))
 						if err != nil {
-							return "", ErrConversion
+							return nil, ErrConversion
 						}
 					}
 
 					cvt, err := Convert(float64(num), c.Lang)
 					if err != nil {
-						return "", err
+						return nil, err
+					}
+
+					cvt, err = cvt.convertEN()
+					if err != nil {
+						return nil, err
 					}
 
 					numberText = cvt.GetText()
@@ -79,10 +86,12 @@ func (c *Converter) convertEN() (string, error) {
 	}
 
 	if len(c.Text) == 0 {
-		return "", nil
+		return nil, nil
 	}
 
-	return c.Text[:len(c.Text)-1], nil
+	c.Text = c.Text[:len(c.Text)-1]
+
+	return c, nil
 }
 
 func (c *Converter) getSpecialTextEN(number, digit int) string {
