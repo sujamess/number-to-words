@@ -11,14 +11,13 @@ func Convert(number float64, lang string) (*Converter, error) {
 	formattedNumber := strconv.FormatFloat(number, 'f', 2, 64)
 
 	splits := strings.Split(formattedNumber, ".")
-	d, fp := splits[0], splits[1]
 
-	decimal, err := strconv.Atoi(d)
+	decimal, err := strconv.Atoi(splits[0])
 	if err != nil {
 		return nil, ErrConversion
 	}
 
-	floating, err := strconv.Atoi(fp)
+	floating, err := strconv.Atoi(splits[1])
 	if err != nil {
 		return nil, ErrConversion
 	}
