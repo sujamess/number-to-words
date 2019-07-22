@@ -14,12 +14,12 @@ func Convert(number float64, lang string) (*Converter, error) {
 
 	decimal, err := strconv.Atoi(splits[0])
 	if err != nil {
-		return nil, ErrConversion
+		return nil, ErrInvalidNumber
 	}
 
 	floating, err := strconv.Atoi(splits[1])
 	if err != nil {
-		return nil, ErrConversion
+		return nil, ErrInvalidNumber
 	}
 
 	return NewConverter(decimal, floating, lang), nil

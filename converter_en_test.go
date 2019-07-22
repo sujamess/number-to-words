@@ -71,13 +71,13 @@ func TestConvertEN(t *testing.T) {
 
 	for idx, tc := range testCases {
 		t.Run(fmt.Sprintf("tc %d", idx+1), func(t *testing.T) {
-			cvt, err := tc.givenConverter.convertEN()
+			var text string
+
+			err := tc.givenConverter.Convert().Scan(&text).Error
 
 			if tc.expectErr != err {
 				t.Errorf("Expect `%s` got `%s`", tc.expectErr, err)
 			}
-
-			text := cvt.GetText()
 
 			if tc.expectText != text {
 				t.Errorf("Expect `%s` got `%s`", tc.expectText, text)

@@ -11,6 +11,7 @@ type Converter struct {
 	Lang     string
 	Text     string
 	Currency string
+	Error    error
 }
 
 // NewConverter returns a new converter
@@ -23,18 +24,18 @@ func NewConverter(decimal, floating int, lang string) *Converter {
 }
 
 // Convert converts string to text
-func (c *Converter) Convert() (*Converter, error) {
+func (c *Converter) Convert() *Converter {
 	if !c.validateLang() {
-		return nil, ErrLangNotSupported
+		c.Error = ErrLangNotSupported
 	}
 
 	switch c.Lang {
 	case supportedLang[en]:
-		return c.convertEN()
+		c.Text, c.Error = convertEN(c.Decimal, c.Floating, c.Lang)
 	case supportedLang[th]:
 	}
 
-	return nil, ErrLangNotSupported
+	return c
 }
 
 func (c *Converter) validateLang() bool {
@@ -47,9 +48,11 @@ func (c *Converter) validateLang() bool {
 	return validateLang(c.Lang)
 }
 
-// GetText gets text
-func (c *Converter) GetText() string {
-	return c.Text
+// Scan gets text
+func (c *Converter) Scan(text *string) *Converter {
+	*text = c.Text
+
+	return c
 }
 
 // SetCurrency append currency to converted text

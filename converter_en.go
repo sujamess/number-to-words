@@ -6,94 +6,83 @@ import (
 	"strconv"
 )
 
-func (c *Converter) convertEN() (*Converter, error) {
-	if isSmallNumber(c.Decimal) {
-		c.Text = getNumberText(c.Decimal, c.Lang)
+func convertEN(decimal, floating int, lang string) (string, error) {
+	var text string
 
-		return c, nil
+	if isSmallNumber(decimal) {
+		text = getNumberText(decimal, lang)
+
+		return text, nil
 	}
 
-	decimal, _ := []byte(strconv.Itoa(c.Decimal)), strconv.Itoa(c.Floating)
-	decimalLeft, _ := c.Decimal, c.Floating
+	dcm, _ := []byte(strconv.Itoa(decimal)), strconv.Itoa(floating)
+	decimalLeft, _ := decimal, floating
 
-	for idx, b := range decimal {
+	for idx, b := range dcm {
 		if decimalLeft == 0 {
 			break
 		}
 
 		if isSmallNumber(decimalLeft) {
-			c.Text += fmt.Sprintf("%s ", getNumberText(decimalLeft, c.Lang))
+			text += fmt.Sprintf("%s ", getNumberText(decimalLeft, lang))
 			break
 		} else {
 			num, err := strconv.Atoi(string(b))
 			if err != nil {
-				return nil, ErrConversion
+				return "", err
 			}
 
-			digit := len(decimal) - idx - 1
+			digit := len(dcm) - idx - 1
 
-			if isSkipDigit(digit, c.Lang) {
+			if isSkipDigit(digit, lang) {
 				continue
 			}
 
-			numberText := getNumberText(num, c.Lang)
-			digitText := getDigitText(digit, c.Lang)
+			numberText := getNumberText(num, lang)
+			digitText := getDigitText(digit, lang)
 			isSpecialNumber := false
 
 			if digit == thousandDigitKey || digit == millionDigitKey {
-				if len(decimal) >= digit+3 || len(decimal) >= digit+2 {
-					if len(decimal) >= digit+3 {
-						num, err = strconv.Atoi(string(decimal[idx-2]) + string(decimal[idx-1]) + string(b))
+				if len(dcm) >= digit+3 || len(dcm) >= digit+2 {
+					if len(dcm) >= digit+3 {
+						num, err = strconv.Atoi(string(dcm[idx-2]) + string(dcm[idx-1]) + string(b))
 						if err != nil {
-							return nil, ErrConversion
+							return "", ErrConversion
 						}
 
-					} else if len(decimal) >= digit+2 {
-						num, err = strconv.Atoi(string(decimal[idx-1]) + string(b))
+					} else if len(dcm) >= digit+2 {
+						num, err = strconv.Atoi(string(dcm[idx-1]) + string(b))
 						if err != nil {
-							return nil, ErrConversion
+							return "", ErrConversion
 						}
 					}
 
-					cvt, err := Convert(float64(num), c.Lang)
+					numberText, err = convertEN(num, 0.00, lang)
 					if err != nil {
-						return nil, err
+						return "", err
 					}
-
-					cvt, err = cvt.convertEN()
-					if err != nil {
-						return nil, err
-					}
-
-					numberText = cvt.GetText()
 				}
 			}
 
 			if digit == tenDigitKey {
-				numberText, isSpecialNumber = isSpecialNumberCase(num, c.Lang)
+				numberText, isSpecialNumber = isSpecialNumberCase(num, lang)
 
 				if !isSpecialNumber {
-					numberText = getNumberText(num, c.Lang)
+					numberText = getNumberText(num, lang)
 				}
 
-				c.Text += fmt.Sprintf("%s%s ", numberText, digitText)
+				text += fmt.Sprintf("%s%s ", numberText, digitText)
 			} else {
-				c.Text += fmt.Sprintf("%s %s ", numberText, digitText)
+				text += fmt.Sprintf("%s %s ", numberText, digitText)
 			}
 
 			decimalLeft -= num * int(math.Pow(10, float64(digit)))
 		}
 	}
 
-	if len(c.Text) == 0 {
-		return nil, nil
+	if len(text) > 0 {
+		text = text[:len(text)-1]
 	}
 
-	c.Text = c.Text[:len(c.Text)-1]
-
-	return c, nil
-}
-
-func (c *Converter) getSpecialTextEN(number, digit int) string {
-	return ""
+	return text, nil
 }
