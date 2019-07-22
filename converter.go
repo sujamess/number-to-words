@@ -26,13 +26,19 @@ func NewConverter(decimal, floating int, lang string) *Converter {
 // Convert converts string to text
 func (c *Converter) Convert() *Converter {
 	if !c.validateLang() {
-		c.Error = ErrLangNotSupported
+		c.Error = AddError(c.Error, ErrLangNotSupported)
 	}
+
+	var err error
 
 	switch c.Lang {
 	case supportedLang[en]:
-		c.Text, c.Error = convertEN(c.Decimal, c.Floating, c.Lang)
+		c.Text, err = convertEN(c.Decimal, c.Floating, c.Lang)
 	case supportedLang[th]:
+	}
+
+	if err != nil {
+		c.Error = AddError(c.Error, err)
 	}
 
 	return c

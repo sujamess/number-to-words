@@ -76,7 +76,7 @@ func TestConvertEN(t *testing.T) {
 			err := tc.givenConverter.Convert().Scan(&text).Error
 
 			if tc.expectErr != err {
-				t.Errorf("Expect `%s` got `%s`", tc.expectErr, err)
+				t.Errorf("Expect `%v` got `%v`", tc.expectErr, err)
 			}
 
 			if tc.expectText != text {
