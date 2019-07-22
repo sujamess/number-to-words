@@ -24,6 +24,16 @@ var digitList = map[string]digitText{
 		millionDigitKey:         "million",
 		tenMillionDigitKey:      "tymillion",
 	},
+	th: {
+		digitKey:                "",
+		tenDigitKey:             "สิบ",
+		hundredDigitKey:         "ร้อย",
+		thousandDigitKey:        "พัน",
+		tenThousandDigitKey:     "หมื่น",
+		hundredThousandDigitKey: "แสน",
+		millionDigitKey:         "ล้าน",
+		tenMillionDigitKey:      "สิบล้าน",
+	},
 }
 
 func getDigitText(digit int, lang string) string {

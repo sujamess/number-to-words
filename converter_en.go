@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"strconv"
+	"strings"
 )
 
 func convertEN(decimal, floating int, lang string) (string, error) {
@@ -23,8 +24,19 @@ func convertEN(decimal, floating int, lang string) (string, error) {
 			break
 		}
 
+		fmt.Printf("decimalLeft: %d\n", decimalLeft)
+
 		if isSmallNumber(decimalLeft) {
-			text += fmt.Sprintf("%s ", getNumberText(decimalLeft, lang))
+			numberText := getNumberText(decimalLeft, lang)
+
+			switch lang {
+			case th:
+				if decimalLeft == 1 && digitKey == digitKey {
+					numberText = getSpecialNumber(decimalLeft, lang)
+				}
+			}
+
+			text += fmt.Sprintf("%s ", numberText)
 			break
 		} else {
 			num, err := strconv.Atoi(string(b))
@@ -38,11 +50,13 @@ func convertEN(decimal, floating int, lang string) (string, error) {
 				continue
 			}
 
+			fmt.Printf("lang = %s, digit: %d, num = %d\n", lang, digit, num)
+
 			numberText := getNumberText(num, lang)
 			digitText := getDigitText(digit, lang)
 			isSpecialNumber := false
 
-			if digit == thousandDigitKey || digit == millionDigitKey {
+			if (digit == thousandDigitKey && lang == en) || (digit == millionDigitKey) {
 				if len(dcm) >= digit+3 || len(dcm) >= digit+2 {
 					if len(dcm) >= digit+3 {
 						num, err = strconv.Atoi(string(dcm[idx-2]) + string(dcm[idx-1]) + string(b))
@@ -80,7 +94,11 @@ func convertEN(decimal, floating int, lang string) (string, error) {
 		}
 	}
 
-	if len(text) > 0 {
+	if lang == th {
+		text = strings.ReplaceAll(text, " ", "")
+	}
+
+	if len(text) > 0 && lang != th {
 		text = text[:len(text)-1]
 	}
 

@@ -31,11 +31,13 @@ func (c *Converter) Convert() *Converter {
 
 	var err error
 
-	switch c.Lang {
-	case supportedLang[en]:
-		c.Text, err = convertEN(c.Decimal, c.Floating, c.Lang)
-	case supportedLang[th]:
-	}
+	// switch c.Lang {
+	// case supportedLang[en]:
+	// 	c.Text, err = convertEN(c.Decimal, c.Floating, c.Lang)
+	// case supportedLang[th]:
+	// 	c.Text, err = convertEN(c.Decimal, c.Floating, c.Lang)
+	// }
+	c.Text, err = convertEN(c.Decimal, c.Floating, c.Lang)
 
 	if err != nil {
 		c.Error = AddError(c.Error, err)
