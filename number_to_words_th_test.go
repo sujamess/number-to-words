@@ -1,347 +1,115 @@
 package numbertowords
 
 import (
+	"strconv"
 	"testing"
 )
 
 func TestIntegerTH(t *testing.T) {
-	t.Run("case 0 without decimal point", func(*testing.T) {
-		str := "0"
+	testCases := []struct {
+		input  string
+		output string
+	}{
+		{"0", "ศูนย์"},
+		{"321", "สามร้อยยี่สิบเอ็ด"},
+		{"31", "สามสิบเอ็ด"},
+		{"5", "ห้า"},
+		{"15", "สิบห้า"},
+		{"22", "ยี่สิบสอง"},
+		{"555", "ห้าร้อยห้าสิบห้า"},
+		{"515", "ห้าร้อยสิบห้า"},
+		{"4414", "สี่พันสี่ร้อยสิบสี่"},
+		{"15512", "หนึ่งหมื่นห้าพันห้าร้อยสิบสอง"},
+		{"52152", "ห้าหมื่นสองพันหนึ่งร้อยห้าสิบสอง"},
+		{"15155", "หนึ่งหมื่นห้าพันหนึ่งร้อยห้าสิบห้า"},
+		{"141512", "หนึ่งแสนสี่หมื่นหนึ่งพันห้าร้อยสิบสอง"},
+		{"1111111", "หนึ่งล้านหนึ่งแสนหนึ่งหมื่นหนึ่งพันหนึ่งร้อยสิบเอ็ด"},
+		{"22222222", "ยี่สิบสองล้านสองแสนสองหมื่นสองพันสองร้อยยี่สิบสอง"},
+	}
 
-		got, _ := readerTH(str, th)
+	for _, tc := range testCases {
+		t.Run(tc.input, func(t *testing.T) {
+			got, err := readerTH(tc.input, th)
+			if err != nil {
+				t.Errorf("Error occurred while reading integer: %v", err)
+			}
 
-		want := "ศูนย์"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 1-9 without decimal point", func(*testing.T) {
-		str := "321"
-
-		got, _ := readerTH(str, th)
-
-		want := "สามร้อยยี่สิบเอ็ด"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 1-9 without decimal point", func(*testing.T) {
-		str := "31"
-
-		got, _ := readerTH(str, th)
-
-		want := "สามสิบเอ็ด"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 1-9 without decimal point", func(*testing.T) {
-		str := "5"
-
-		got, _ := readerTH(str, th)
-
-		want := "ห้า"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10 - 99 without decimal point", func(*testing.T) {
-		str := "15"
-
-		got, _ := readerTH(str, th)
-
-		want := "สิบห้า"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10 - 99 without decimal point", func(*testing.T) {
-		str := "22"
-
-		got, _ := readerTH(str, th)
-
-		want := "ยี่สิบสอง"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 100-999 without decimal point", func(*testing.T) {
-		str := "555"
-
-		got, _ := readerTH(str, th)
-
-		want := "ห้าร้อยห้าสิบห้า"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 100-999 without decimal point", func(*testing.T) {
-		str := "515"
-
-		got, _ := readerTH(str, th)
-
-		want := "ห้าร้อยสิบห้า"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 1000-9999 without decimal point", func(*testing.T) {
-		str := "4414"
-
-		got, _ := readerTH(str, th)
-
-		want := "สี่พันสี่ร้อยสิบสี่"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10000-99999 without decimal point (1)", func(*testing.T) {
-		str := "15512"
-
-		got, _ := readerTH(str, th)
-
-		want := "หนึ่งหมื่นห้าพันห้าร้อยสิบสอง"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10000-99999 without decimal point (2)", func(*testing.T) {
-		str := "52152"
-
-		got, _ := readerTH(str, th)
-
-		want := "ห้าหมื่นสองพันหนึ่งร้อยห้าสิบสอง"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10000-99999 without decimal point (3)", func(*testing.T) {
-		str := "15155"
-
-		got, _ := readerTH(str, th)
-
-		want := "หนึ่งหมื่นห้าพันหนึ่งร้อยห้าสิบห้า"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 100000-999999 without decimal point", func(*testing.T) {
-		str := "141512"
-
-		got, _ := readerTH(str, th)
-
-		want := "หนึ่งแสนสี่หมื่นหนึ่งพันห้าร้อยสิบสอง"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 1000000-9999999 without decimal point", func(*testing.T) {
-		str := "1111111"
-
-		got, _ := readerTH(str, th)
-
-		want := "หนึ่งล้านหนึ่งแสนหนึ่งหมื่นหนึ่งพันหนึ่งร้อยสิบเอ็ด"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10000000-99999999 without decimal point", func(*testing.T) {
-		str := "22222222"
-
-		got, _ := readerTH(str, th)
-
-		want := "ยี่สิบสองล้านสองแสนสองหมื่นสองพันสองร้อยยี่สิบสอง"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
+			if got != tc.output {
+				t.Errorf("got %v, expect %v", got, tc.output)
+			}
+		})
+	}
 }
 
 func TestDecimalTH(t *testing.T) {
-	t.Run("case no decimal", func(*testing.T) {
-		str := "00"
+	testCases := []struct {
+		input  string
+		output string
+	}{
+		{"00", "ถ้วน"},
+		{"01", "หนึ่งสตางค์"},
+		{"10", "สิบสตางค์"},
+		{"15", "สิบห้าสตางค์"},
+		{"20", "ยี่สิบสตางค์"},
+		{"25", "ยี่สิบห้าสตางค์"},
+	}
 
-		got, _ := decimalTH(str, th)
+	for _, tc := range testCases {
+		t.Run(tc.input, func(t *testing.T) {
+			got, err := decimalTH(tc.input, th)
+			if err != nil {
+				t.Errorf("Error occurred while converting the decimal in Thai: %v", err)
+			}
 
-		want := "ถ้วน"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 0-9", func(*testing.T) {
-		str := "01"
-
-		got, _ := decimalTH(str, th)
-
-		want := "หนึ่งสตางค์"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10-19", func(*testing.T) {
-		str := "10"
-
-		got, _ := decimalTH(str, th)
-
-		want := "สิบสตางค์"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10-19", func(*testing.T) {
-		str := "15"
-
-		got, _ := decimalTH(str, th)
-
-		want := "สิบห้าสตางค์"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 20-29", func(*testing.T) {
-		str := "20"
-
-		got, _ := decimalTH(str, th)
-
-		want := "ยี่สิบสตางค์"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 20-29", func(*testing.T) {
-		str := "25"
-
-		got, _ := decimalTH(str, th)
-
-		want := "ยี่สิบห้าสตางค์"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
+			if got != tc.output {
+				t.Errorf("got %v, expect %v", got, err)
+			}
+		})
+	}
 }
 
 func TestConvertTH(t *testing.T) {
-	t.Run("case 0-9 (1)", func(*testing.T) {
-		number := 0.00
+	testCases := []struct {
+		input  float64
+		output string
+	}{
+		{0.00, "ศูนย์บาทถ้วน"},
+		{0.25, "ยี่สิบห้าสตางค์"},
+		{9.99, "เก้าบาทเก้าสิบเก้าสตางค์"},
+		{10.00, "สิบบาทถ้วน"},
+		{22.22, "ยี่สิบสองบาทยี่สิบสองสตางค์"},
+		{88.88, "แปดสิบแปดบาทแปดสิบแปดสตางค์"},
+		{111.11, "หนึ่งร้อยสิบเอ็ดบาทสิบเอ็ดสตางค์"},
+	}
 
-		got, _ := Convert(number, th)
+	for _, tc := range testCases {
+		t.Run(strconv.FormatFloat(tc.input, 'f', 2, 64), func(t *testing.T) {
+			got, err := Convert(tc.input, th)
+			if err != nil {
+				t.Errorf("Error occurred while converting the number into Thai: %v", err)
+			}
 
-		want := "ศูนย์บาทถ้วน"
+			if got != tc.output {
+				t.Errorf("got %v, expect %v", got, tc.output)
+			}
+		})
+	}
+}
 
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
+func BenchmarkReaderTH(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		readerTH("22222222", th)
+	}
+}
 
-	t.Run("case 0-9 (2)", func(*testing.T) {
-		number := 0.25
+func BenchmarkDecimalTH(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		decimalTH("25", th)
+	}
+}
 
-		got, _ := Convert(number, th)
-
-		want := "ยี่สิบห้าสตางค์"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 0-9 (3)", func(*testing.T) {
-		number := 9.99
-
-		got, _ := Convert(number, th)
-
-		want := "เก้าบาทเก้าสิบเก้าสตางค์"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10-99 (1)", func(*testing.T) {
-		number := 10.00
-
-		got, _ := Convert(number, th)
-
-		want := "สิบบาทถ้วน"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10-99 (2)", func(*testing.T) {
-		number := 22.22
-
-		got, _ := Convert(number, th)
-
-		want := "ยี่สิบสองบาทยี่สิบสองสตางค์"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10-99 (3)", func(*testing.T) {
-		number := 88.88
-
-		got, _ := Convert(number, th)
-
-		want := "แปดสิบแปดบาทแปดสิบแปดสตางค์"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 100-999 (3)", func(*testing.T) {
-		number := 111.11
-
-		got, _ := Convert(number, th)
-
-		want := "หนึ่งร้อยสิบเอ็ดบาทสิบเอ็ดสตางค์"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
+func BenchmarkConvertTH(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Convert(111.11, th)
+	}
 }

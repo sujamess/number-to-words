@@ -1,371 +1,117 @@
 package numbertowords
 
 import (
+	"strconv"
 	"testing"
 )
 
 func TestIntegerEN(t *testing.T) {
-	t.Run("case 0 without decimal point", func(*testing.T) {
-		str := "0"
-
-		got, _ := integerEN(str, en)
-
-		want := "zero"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 1-9 without decimal point", func(*testing.T) {
-		str := "5"
-
-		got, _ := integerEN(str, en)
-
-		want := "five"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10 - 99 without decimal point", func(*testing.T) {
-		str := "11"
-
-		got, _ := integerEN(str, en)
-
-		want := "eleven"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10 - 99 without decimal point", func(*testing.T) {
-		str := "15"
-
-		got, _ := integerEN(str, en)
-
-		want := "fifteen"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10-99", func(*testing.T) {
-		str := "88"
-
-		got, _ := integerEN(str, en)
-
-		want := "eighty eight"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10-99", func(*testing.T) {
-		str := "44"
-
-		got, _ := integerEN(str, en)
-
-		want := "fourty four"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 100-999 without decimal point", func(*testing.T) {
-		str := "111"
-
-		got, _ := integerEN(str, en)
-
-		want := "onehundred eleven"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 100-999 without decimal point", func(*testing.T) {
-		str := "555"
-
-		got, _ := integerEN(str, en)
-
-		want := "fivehundred fifty five"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 100-999 without decimal point", func(*testing.T) {
-		str := "515"
-
-		got, _ := integerEN(str, en)
-
-		want := "fivehundred fifteen"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 1000-9999 without decimal point", func(*testing.T) {
-		str := "4414"
-
-		got, _ := integerEN(str, en)
-
-		want := "fourthousand fourhundred fourteen"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10000-99999 without decimal point (1)", func(*testing.T) {
-		str := "15512"
-
-		got, _ := integerEN(str, en)
-
-		want := "fifteenthousand fivehundred twelve"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10000-99999 without decimal point (2)", func(*testing.T) {
-		str := "52152"
-
-		got, _ := integerEN(str, en)
-
-		want := "fifty twothousand onehundred fifty two"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10000-99999 without decimal point (3)", func(*testing.T) {
-		str := "15155"
-
-		got, _ := integerEN(str, en)
-
-		want := "fifteenthousand onehundred fifty five"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 100000-999999 without decimal point", func(*testing.T) {
-		str := "141512"
-
-		got, _ := integerEN(str, en)
-
-		want := "onehundred fourty onethousand fivehundred twelve"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 1000000-9999999 without decimal point", func(*testing.T) {
-		str := "1111111"
-
-		got, _ := integerEN(str, en)
-
-		want := "onemillion onehundred eleventhousand onehundred eleven"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10000000-99999999 without decimal point", func(*testing.T) {
-		str := "22222222"
-
-		got, _ := integerEN(str, en)
-
-		want := "twenty twomillion twohundred twenty twothousand twohundred twenty two"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10000000-99999999 without decimal point", func(*testing.T) {
-		str := "88888888"
-
-		got, _ := integerEN(str, en)
-
-		want := "eighty eightmillion eighthundred eighty eightthousand eighthundred eighty eight"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
+	testCases := []struct {
+		input  string
+		output string
+	}{
+		{"0", "zero"},
+		{"5", "five"},
+		{"11", "eleven"},
+		{"15", "fifteen"},
+		{"88", "eighty eight"},
+		{"44", "fourty four"},
+		{"111", "onehundred eleven"},
+		{"555", "fivehundred fifty five"},
+		{"515", "fivehundred fifteen"},
+		{"4414", "fourthousand fourhundred fourteen"},
+		{"15512", "fifteenthousand fivehundred twelve"},
+		{"52152", "fifty twothousand onehundred fifty two"},
+		{"15155", "fifteenthousand onehundred fifty five"},
+		{"141512", "onehundred fourty onethousand fivehundred twelve"},
+		{"1111111", "onemillion onehundred eleventhousand onehundred eleven"},
+		{"22222222", "twenty twomillion twohundred twenty twothousand twohundred twenty two"},
+		{"88888888", "eighty eightmillion eighthundred eighty eightthousand eighthundred eighty eight"},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.input, func(t *testing.T) {
+			got, err := integerEN(tc.input, en)
+			if err != nil {
+				t.Errorf("Error occurred while converting integer to words: %v", err)
+			}
+
+			if got != tc.output {
+				t.Errorf("got %v, expect %v", got, tc.output)
+			}
+		})
+	}
 }
 
 func TestDecimalEN(t *testing.T) {
-	t.Run("case no decimal", func(*testing.T) {
-		str := "00"
+	testCases := []struct {
+		input  string
+		output string
+	}{
+		{"00", ""},
+		{"01", "point zero one"},
+		{"10", "point one"},
+		{"15", "point one five"},
+		{"20", "point two"},
+		{"25", "point two five"},
+	}
 
-		got, _ := decimalEN(str, en)
+	for _, tc := range testCases {
+		t.Run(tc.input, func(t *testing.T) {
+			got, err := decimalEN(tc.input, en)
+			if err != nil {
+				t.Errorf("Error occurred while converting decimal to words: %v", err)
+			}
 
-		want := ""
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 0-9", func(*testing.T) {
-		str := "01"
-
-		got, _ := decimalEN(str, en)
-
-		want := "point zero one"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10-19", func(*testing.T) {
-		str := "10"
-
-		got, _ := decimalEN(str, en)
-
-		want := "point one"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10-19", func(*testing.T) {
-		str := "15"
-
-		got, _ := decimalEN(str, en)
-
-		want := "point one five"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 20-29", func(*testing.T) {
-		str := "20"
-
-		got, _ := decimalEN(str, en)
-
-		want := "point two"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 20-29", func(*testing.T) {
-		str := "25"
-
-		got, _ := decimalEN(str, en)
-
-		want := "point two five"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
+			if got != tc.output {
+				t.Errorf("got %v, expect %v", got, tc.output)
+			}
+		})
+	}
 }
 
 func TestConvertEN(t *testing.T) {
-	t.Run("case 0-9 (1)", func(*testing.T) {
-		number := 0.00
+	testCases := []struct {
+		input  float64
+		output string
+	}{
+		{0.00, "zero baht"},
+		{0.25, "zero point two five baht"},
+		{9.99, "nine point nine nine baht"},
+		{10.00, "ten baht"},
+		{22.22, "twenty two point two two baht"},
+		{88.88, "eighty eight point eight eight baht"},
+		{111.11, "onehundred eleven point one one baht"},
+	}
 
-		got, _ := Convert(number, en)
+	for _, tc := range testCases {
+		t.Run(strconv.FormatFloat(tc.input, 'f', 2, 64), func(t *testing.T) {
+			got, err := Convert(tc.input, en)
+			if err != nil {
+				t.Errorf("Error occurred while converting: %v", err)
+			}
 
-		want := "zero baht"
+			if got != tc.output {
+				t.Errorf("got %v, expect %v", got, tc.output)
+			}
+		})
+	}
+}
 
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
+func BenchmarkIntegerEN(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		integerEN("88888888", en)
+	}
+}
 
-	t.Run("case 0-9 (2)", func(*testing.T) {
-		number := 0.25
+func BenchmarkDecimalEN(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		decimalEN("25", en)
+	}
+}
 
-		got, _ := Convert(number, en)
-
-		want := "zero point two five baht"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 0-9 (3)", func(*testing.T) {
-		number := 9.99
-
-		got, _ := Convert(number, en)
-
-		want := "nine point nine nine baht"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10-99 (1)", func(*testing.T) {
-		number := 10.00
-
-		got, _ := Convert(number, en)
-
-		want := "ten baht"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10-99 (2)", func(*testing.T) {
-		number := 22.22
-
-		got, _ := Convert(number, en)
-
-		want := "twenty two point two two baht"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 10-99 (3)", func(*testing.T) {
-		number := 88.88
-
-		got, _ := Convert(number, en)
-
-		want := "eighty eight point eight eight baht"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
-
-	t.Run("case 100-999 (3)", func(*testing.T) {
-		number := 111.11
-
-		got, _ := Convert(number, en)
-
-		want := "onehundred eleven point one one baht"
-
-		if got != want {
-			t.Errorf(`Expect "%v" got "%v"`, want, got)
-		}
-	})
+func BenchmarkConvertEN(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Convert(111.11, en)
+	}
 }
