@@ -21,7 +21,7 @@ func main() {
 
   text, err := numbertowords.Convert(num, "en")
   if err != nil {
-        fmt.Println("Error occured: %v", err)
+        fmt.Println("Error occurred: %v", err)
   }
   
   fmt.Println(text) // result: fiftyhundred fifty five point five five baht
