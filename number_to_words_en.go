@@ -39,7 +39,7 @@ func fullWordsEN(number float64) (string, error) {
 }
 
 func integerEN(str, lang string) (string, error) {
-	integer, err := convertStringToFloat64(str)
+	integer, err := strconv.ParseFloat(str, 64)
 	if err != nil {
 		return "", err
 	}

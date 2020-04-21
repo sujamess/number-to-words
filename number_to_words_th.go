@@ -2,6 +2,7 @@ package numbertowords
 
 import (
 	"math"
+	"strconv"
 	"strings"
 )
 
@@ -43,7 +44,7 @@ func fullWordsTH(number float64) (string, error) {
 }
 
 func readerTH(str, lang string) (string, error) {
-	integer, err := convertStringToFloat64(str)
+	integer, err := strconv.ParseFloat(str, 64)
 	if err != nil {
 		return "", err
 	}
@@ -89,7 +90,7 @@ func readerTH(str, lang string) (string, error) {
 				}
 			}
 
-			numKey, err := convertStringToFloat64(num)
+			numKey, err := strconv.ParseFloat(num, 64)
 			if err != nil {
 				return "", err
 			}
