@@ -96,18 +96,6 @@ func TestConvertTH(t *testing.T) {
 	}
 }
 
-func BenchmarkReaderTH(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		readerTH("22222222", th)
-	}
-}
-
-func BenchmarkDecimalTH(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		decimalTH("25", th)
-	}
-}
-
 func BenchmarkConvertTH(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		Convert(111.11, th)

@@ -98,18 +98,6 @@ func TestConvertEN(t *testing.T) {
 	}
 }
 
-func BenchmarkIntegerEN(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		integerEN("88888888", en)
-	}
-}
-
-func BenchmarkDecimalEN(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		decimalEN("25", en)
-	}
-}
-
 func BenchmarkConvertEN(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		Convert(111.11, en)
